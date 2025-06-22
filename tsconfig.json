@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES2020", // Modern JavaScript
+    "module": "CommonJS", // Required for ts-node compatibility
+    "moduleResolution": "node", // Required to find node_modules
+    "rootDir": "./", // Source root
+    "outDir": "./dist", // Compile output folder
+    "esModuleInterop": true, // Allow default imports
+    "strict": true, // Strict type checking
+    "skipLibCheck": true, // Speeds up compile time
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["server", "memory"]
+}

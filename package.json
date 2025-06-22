@@ -1,0 +1,31 @@
+{
+  "name": "javis-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "ts-node server/server.js",
+    "qdrant:setup": "ts-node memory/qdrant/todo/setupCollection.ts",
+    "qdrant:insert": "ts-node memory/qdrant/todo/insert.ts",
+    "qdrant:search": "ts-node memory/qdrant/todo/search.ts",
+    "qdrant:delete": "ts-node memory/qdrant/todo/delete.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@qdrant/js-client-rest": "^1.14.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "openai": "^5.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}
