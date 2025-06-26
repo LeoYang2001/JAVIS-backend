@@ -30,5 +30,3 @@ export async function insertTodo(content: string, sqlId: number) {
 
   console.log("🧠 Inserted todo:", content);
 }
-
-insertTodo("Pick up Renee from the airport at 6 PM", 101);

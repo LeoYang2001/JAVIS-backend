@@ -9,6 +9,13 @@ require("dotenv").config();
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
+let wssInstance = null;
+
+// Function to set the WebSocket server instance
+function setWebSocketServer(wss) {
+  wssInstance = wss;
+}
+
 async function insertTodo(req, res) {
   const { content, sqlId } = req.body;
   try {
@@ -77,15 +84,37 @@ const getAllTodos = async (req, res) => {
 const startLongMockTask = (req, res) => {
   console.log("Backend: Starting long mock task...");
 
-  // Send an immediate response to the client
+  // Send an immediate response to the client (JAVIS agent)
   res.json({ status: "Task started in background." });
 
   // Simulate a 10-second delay
   setTimeout(() => {
     console.log("Backend: Long mock task completed after 10 seconds.");
-    // In a real application, you might send a webhook back to the agent
-    // or update a status that the agent can poll.
-  }, 100000); // 10 seconds
+
+    // --- WebSocket Notification ---
+    if (wssInstance) {
+      console.log("Backend: Sending WebSocket notification to clients...");
+      const notification = {
+        type: "longTaskCompleted",
+        taskName: "web_scrape_mock",
+        status: "completed",
+        data: "Mock scraped content!",
+        timestamp: new Date().toISOString(),
+      };
+      // Send message to all connected WebSocket clients
+      wssInstance.clients.forEach((client) => {
+        if (client.readyState === require("ws").OPEN) {
+          client.send(JSON.stringify(notification));
+          console.log("Backend: Sent WebSocket notification to client.");
+        }
+      });
+    } else {
+      console.warn(
+        "Backend: WebSocket server not initialized. Cannot send notification."
+      );
+    }
+    // --- End WebSocket Notification ---
+  }, 10000); // 10 seconds
 };
 
 module.exports = {
@@ -94,4 +123,5 @@ module.exports = {
   deleteTodo,
   getAllTodos,
   startLongMockTask,
+  setWebSocketServer,
 };

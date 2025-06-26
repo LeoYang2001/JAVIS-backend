@@ -26,8 +26,3 @@ export async function searchTodos(query: string, topK = 3) {
     score: res.score,
   }));
 }
-
-// Test it
-searchTodos("pick up Renee from the airport")
-  .then(console.log)
-  .catch(console.error);

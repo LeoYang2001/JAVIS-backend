@@ -16,6 +16,3 @@ const deleteTodo = async (sqlId: number) => {
     console.error("❌ Failed to delete point:", err);
   }
 };
-
-// 👇 Example usage (you can change this ID for testing)
-deleteTodo(101);

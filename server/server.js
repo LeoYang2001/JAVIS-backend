@@ -1,6 +1,9 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
+const WebSocket = require("ws"); // Import WebSocket
+const http = require("http");
+const { setWebSocketServer } = require("./features/todo/controller");
 
 dotenv.config();
 
@@ -38,9 +41,40 @@ app.post("/api/session", async (req, res) => {
 });
 
 const todoRoutes = require("./features/todo/routes");
+// const personalFactsRoutes = require("./features/personalFacts/routes");
 app.use("/api/todo", todoRoutes);
+// app.use("/api/personal", personalFactsRoutes);
 
 const PORT = 3001;
-app.listen(PORT, () => {
-  console.log(`✅ Express server running at http://localhost:${PORT}`);
+
+// Create HTTP server
+const server = http.createServer(app);
+
+// Create WebSocket server and attach it to the HTTP server
+const wss = new WebSocket.Server({ server });
+
+// Pass the WebSocket server instance to your controller
+setWebSocketServer(wss);
+
+wss.on("connection", (ws) => {
+  console.log("Frontend client connected to WebSocket.");
+
+  ws.on("message", (message) => {
+    console.log(`Received message from client: ${message}`);
+    // You can handle messages from the client here if needed
+  });
+
+  ws.on("close", () => {
+    console.log("Frontend client disconnected from WebSocket.");
+  });
+
+  ws.on("error", (error) => {
+    console.error("WebSocket error:", error);
+  });
+});
+
+// Start the server
+server.listen(PORT, () => {
+  console.log(`Backend API running on http://localhost:${PORT}`);
+  console.log(`WebSocket server also running on ws://localhost:${PORT}`);
 });
